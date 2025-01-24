@@ -1,0 +1,23 @@
+---
+import type { Props } from '@astrojs/starlight/props';
+
+import NavItem from './NavItem.astro';
+import ThemeSelect from '../ThemeSelect.astro';
+---
+
+<div class="w-full h-16 bg-white flex items-center justify-between flex-row border-b border-b-zinc-600/10 shadow-sm z-50 dark:bg-zinc-900">
+    <a href="/" class="no-underline mx-6">
+        <h1 class="text-2xl text-orange-500 font-bold tracking-wide dark:text-orange-600">
+            Brickhouse
+        </h1>
+    </a>
+
+    <div class="hidden h-full flex-row items-center gap-2 mx-6 lg:flex">
+        <NavItem href="/getting-started/introduction">Documentation</NavItem>
+        <NavItem href="https://github.com/brickhouse-php/brickhouse">GitHub</NavItem>
+
+        <div class="print:hidden ms-2">
+            <ThemeSelect {...Astro.props} />
+        </div>
+    </div>
+</div>

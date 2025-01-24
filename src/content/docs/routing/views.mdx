@@ -1,0 +1,151 @@
+---
+title: Views
+description: Reference for how to create, route and navigate views.
+sidebar:
+    order: 1
+---
+
+**Views** are files that are stored in the `resources/views/` subdirectory in your application. They contain the layout, content and styling of every page which will be shown to your users.
+
+Views are written in an extended version of HTML, which allows for more dynamic and interpolated content. This makes it much easier to iterate and re-use existing templates in multiple places.
+
+When rendering HTML views, you should use the `.html.php` file extension. You can also use [JSON views](#json-views).
+
+## Rendering views
+
+Views can be created in multiple different ways, but the easiest and recommended way is to use the `view` helper:
+
+```php title="routes/app.php"
+Router::get('/', fn() => render('Welcome'));
+```
+
+This will render the template located at `resources/views/welcome.html.php` and send it back to the user.
+
+## Displaying data
+
+You can use the renderer to interpolate content in the template. You can do so by wrapping the variable in curly braces. For example, when given the following route:
+
+```php title="routes/app.php"
+Router::get('/', fn() => render('Welcome', ['name' => 'Max']))
+```
+
+Where `Welcome` references to the template:
+
+```html resources/views/welcome.html.php"
+<p>Hello, {{ $name }}.</p>
+```
+
+The view will render as:
+
+```html
+<p>Hello, Max.</p>
+```
+
+You can also display the results of any PHP function - or really any PHP code:
+
+```html title="resources/views/welcome.html.php"
+<p>UNIX Time: {{ time() }}</p>
+```
+
+## Conditions
+
+The templating engine allows for conditions, which act on any data passed to the template. They provide a more concise way of adding conditional content to your template, without using PHP's control structures.
+
+Conditional statements, along with other control structures, as defined using attributes:
+
+```html
+<p :if="count($rows) === 1">There is a single row.</p>
+<p :else-if="count($rows) > 1">There is multiple rows.</p>
+<p :else>There are no rows.</p>
+```
+
+Just like interpolation, these attributes support any PHP code which can be used inside a normal `if`-statement.
+
+## Loops
+
+In addition to conditional attributes, you can also iterate over elements in a list:
+
+```html
+<p :for="$i = 0; $i < 10; $i++">Row index: {{ $i }}</p>
+```
+
+```html
+<p :foreach="$users as $user">User ID: {{ $user->id }}</p>
+```
+
+## JSON Views
+
+So far, we've only discussed HTML views. But, Brickhouse also supports JSON views for your API endpoints. They are also stored in the `resources/views/`-directory, but they use the `.json.php` extension.
+
+As opposed to HTML views which render some HTML content, JSON views return an array which represents the JSON structure to render. For example, the given view:
+
+```php title="resources/views/greeting.json.php"
+return [
+    'greeting' => 'Hello, ' . $name
+];
+```
+
+```php title="routes/app.php"
+use Brickhouse\Http\Router;
+
+Router::get('/greeting', fn() => render('greeting', [
+    'name' => 'Max'
+]));
+```
+
+Would be rendered into:
+
+```json
+{
+    "greeting": "Hello, Max"
+}
+```
+
+JSON views can be used alongside HTML views of the same name. The returned view would then be determined by which format the request is expected. For example, if a request has the header `Accept: application/json`, the JSON view would be returned. If the request has the header `Accept: text/html`, the HTML view would be returned.
+
+So, given an HTML view and a JSON view of the same name:
+
+```php title="resources/views/greeting.html.php"
+<html>
+    <body>
+        <h1>Hello, {{ $name }}</h1>
+    </body>
+</html>
+```
+
+```php title="resources/views/greeting.json.php"
+return [
+    'greeting' => 'Hello, ' . $name
+];
+```
+
+Both views can be retrieved by sending a corresponding `Accept`-header:
+
+```bash
+$ curl http://localhost:8000/greeting -H "Accept: text/html"
+<html>
+    <body>
+        <h1>Hello, Max</h1>
+    </body>
+</html>
+```
+
+```bash
+$ curl http://localhost:8000/greeting -H "Accept: application/json"
+{
+    "greeting": "Hello, Max"
+}
+```
+
+### JSON routes
+
+While you can use the `Accept`-header to define which format to retrieve, Brickhouse also allows you to specifiy the format in the request path, like so:
+
+```bash
+$ curl http://localhost:8000/greeting.json
+{
+    "greeting": "Hello, Max"
+}
+```
+
+This is inspired by how [Ruby on Rails](https://guides.rubyonrails.org/routing.html#format-segments) handles format segments. This also works for `.html` views, and possibly more in the future.

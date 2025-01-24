@@ -1,0 +1,51 @@
+---
+import type { Props } from '@astrojs/starlight/props';
+import ThemeProvider from '@astrojs/starlight/components/ThemeProvider.astro';
+
+import Navbar from '../components/Navigation/Navbar.astro';
+---
+
+<html lang={Astro.props.lang} dir={Astro.props.dir} >
+	<head>
+        <title>{Astro.props.title ?? 'Brickhouse'}</title>
+
+		<ThemeProvider {...Astro.props} />
+	</head>
+  <body class="w-full font-sans antialiased">
+    <div class="w-full min-w-full max-w-2xl min-h-screen bg-white flex flex-col mx-auto lg:max-w-7xl dark:bg-zinc-900">
+        <Navbar {...Astro.props} />
+
+        <main class="relative flex flex-col">
+            <div class="relative max-h-full overflow-y-hidden pointer-events-none isolate z-0 px-6 pt-14 pb-8 lg:px-8">
+                <div class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80" aria-hidden="true">
+                    <div
+                        class="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-rose-600 to-red-400 opacity-15 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
+                        style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)"
+                    >
+                    </div>
+                </div>
+                <div
+                    class="absolute inset-x-0 top-[calc(100%-18rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-35rem)]"
+                    aria-hidden="true"
+                >
+                    <div
+                        class="relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr from-rose-600 to-red-400 opacity-15 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]"
+                        style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)"
+                    >
+                </div>
+            </div>
+
+            <div class="z-20 flex flex-col items-center pointer-events-auto">
+                <slot />
+            </div>
+        </main>
+    </div>
+</body>
+</html>
+
+<style>
+    body, html {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+</style>

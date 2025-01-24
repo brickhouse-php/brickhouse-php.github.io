@@ -1,0 +1,11 @@
+---
+const { size = 'default' } = Astro.props;
+---
+
+<div class:list={[
+    'flex flex-row items-center justify-center text-black font-medium rounded-md transition cursor-pointer dark:text-white hover:bg-zinc-500/10',
+    { 'text-sm px-3 h-10': size === 'default' },
+    { 'text-base px-4 h-12': size === 'large' },
+]}>
+    <slot />
+</div>

@@ -1,0 +1,21 @@
+---
+import { Code } from 'astro:components';
+
+interface Props {
+    code: string;
+};
+
+const { code } = Astro.props;
+---
+
+<div class="max-w-full h-fit text-zinc-100 bg-[#24292e] leading-normal overflow-hidden rounded-xl shadow-lg px-5 pt-4 pb-6">
+    <div class="flex flex-row gap-1.5">
+        <span class="rounded-full block size-2 bg-red-500"></span>
+        <span class="rounded-full block size-2 bg-orange-300"></span>
+        <span class="rounded-full block size-2 bg-green-500"></span>
+    </div>
+
+    <code class="flex text-sm font-mono whitespace-pre-line subpixel-antialiased mt-4">
+        <Code code={code} lang="php" />
+    </code>
+</div>

@@ -1,0 +1,52 @@
+---
+title: Layouts
+description: Reference for how to create and render views with layouts.
+sidebar:
+    order: 3
+---
+
+import { Code } from '@astrojs/starlight/components';
+
+Views in an application often share a lot of common elements, such as navigation, headers, footers, etc. To define the common interface, you can use **layouts**. Layouts are defined much like components, but are stored within `resources/views/layouts/` instead of `resources/views/components/`:
+
+```html title="resources/views/layouts/app.html.php"
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Application Title</title>
+    </head>
+    <body>
+        <slot />
+    </body>
+</html>
+```
+
+Within the layout, we define a `slot`-tag, which defines where the view content is meant to be rendered. To use the layout, you can reference it by prefixing `x-layout::` to the layout path:
+
+```html
+<x-layout::app>
+    <h1>Dashboard</h1>
+</x-layout::app>
+```
+
+### Passing attributes
+
+Much like components, layouts also support passing attributes:
+
+```html title="resources/views/layouts/app.html.php"
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{{ $title ?? 'Application Title' }}</title>
+    </head>
+    <body>
+        <slot />
+    </body>
+</html>
+```
+
+```html
+<x-layout::app title="Dashboard">
+    <h1>Dashboard</h1>
+</x-layout::app>
+```

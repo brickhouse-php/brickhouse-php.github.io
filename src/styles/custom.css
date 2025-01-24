@@ -1,0 +1,62 @@
+:root {
+	--sl-text-h1: var(--sl-text-3xl);
+	--sl-text-h2: var(--sl-text-2xl);
+	--sl-text-h3: var(--sl-text-xl);
+	--sl-text-h4: var(--sl-text-lg);
+	--sl-text-h5: var(--sl-text-base);
+}
+
+:root[data-theme='light'], [data-theme='light'] ::backdrop {
+	--sl-color-file-tree-bg: #fafafa;
+
+	--sl-icon-color: var(--sl-color-gray-2);
+	--sl-color-bg-nav: var(--sl-color-black);
+	--sl-color-bg-sidebar: var(--sl-color-gray-7);
+}
+
+:root[data-theme='dark'], [data-theme='dark'] ::backdrop {
+	--sl-color-file-tree-bg: var(--sl-color-gray-6);
+
+	--sl-icon-color: var(--sl-color-gray-1);
+	--sl-color-text-accent: var(--sl-color-accent-high);
+}
+
+h1#_top {
+	@apply font-bold;
+}
+
+starlight-file-tree {
+	background-color: var(--sl-color-file-tree-bg) !important;
+}
+
+main > div.content-panel:nth-child(2) {
+	@apply border-t-0 pt-0;
+}
+
+table td > code {
+    text-wrap: nowrap;
+}
+
+code {
+	@apply rounded-sm;
+}
+
+div.sl-markdown-content > table {
+	@apply w-full table;
+}
+
+div.expressive-code .frame figcaption {
+	@apply font-sans tracking-wide text-sm justify-center;
+}
+
+div.expressive-code .frame {
+	@apply rounded-md;
+}
+
+div.expressive-code .frame .header {
+	@apply rounded-t-md;
+}
+
+div.expressive-code .frame pre {
+	@apply rounded-b-md;
+}

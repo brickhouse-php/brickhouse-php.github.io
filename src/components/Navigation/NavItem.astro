@@ -1,0 +1,13 @@
+---
+import GhostButton from '../Button/Ghost.astro';
+
+const { href } = Astro.props;
+---
+
+<a href={ href } class="no-underline">
+    <div class="w-fit h-full flex items-center text-base font-light text-zinc-800 dark:text-zinc-300">
+        <GhostButton>
+            <slot />
+        </GhostButton>
+    </div>
+</a>

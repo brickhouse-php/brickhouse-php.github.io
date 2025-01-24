@@ -1,0 +1,119 @@
+---
+title: Routing
+description: Defines and outlines how to route application requests.
+sidebar:
+    order: 0
+---
+
+When a clients visits some route in your application, Brickhouse will need to know how to route it to the appropriate handler.
+
+## Basic routing
+
+Routes for HTTP requests are defined in the `routes/app.php` file in the project. For example, the following route defines a route, `/greeting`, which returns the string `Hello World`:
+
+```php title="routes/app.php"
+use Brickhouse\Http\Router;
+
+Router::get('/greeting', fn() => 'Hello World');
+```
+
+As the method suggests, this only maps `GET` requests to the given handler. There are other methods on `Router` which allows you to bind routes, such as:
+
+```php title="routes/app.php"
+use Brickhouse\Http\Router;
+
+Router::get('/greeting', fn() => ...);
+Router::post('/greeting', fn() => ...);
+Router::put('/greeting', fn() => ...);
+Router::patch('/greeting', fn() => ...);
+Router::delete('/greeting', fn() => ...);
+Router::options('/greeting', fn() => ...);
+```
+
+You can also use `any`, which will map the route to all HTTP verbs:
+
+```php title="routes/app.php"
+Router::any('/', fn() => ...);
+```
+
+### Using `root`
+
+You can define which handler should be used for `'/'` with the `root` method:
+
+```php title="routes/app.php"
+Router::root(fn() => ...);
+```
+
+You'd want to put this statement at the top of the file, so it can be matched first.
+
+### Fallback routes
+
+You can also define which handler to use when no other routes matched using the `fallback` method:
+
+```php title="routes/app.php"
+Router::fallback(fn() => ...);
+```
+
+You'd want to put this statement at the end of the file, as it might match requests which might otherwise have found a match.
+
+## Route parameters
+
+Parameters can be defined by adding a colon to the beginning of a route segment. When the route is matched, the captured parameters will be passed to the callback:
+
+```php title="routes/app.php"
+Router::get('/posts/:id', fn($id) => ...);
+```
+
+You may define as many parameters in a single route as required:
+
+```php title="routes/app.php"
+Router::get('/users/:user/posts/:post', fn($user, $post) => ...);
+```
+
+Route parameters names consist of alphanumeric (`[A-Za-z0-9]`) characters and underscores (`_`).
+
+### Optional parameters
+
+So far, all route parameters have been required for the route to match. But, parameters can also be marked as optional, allowing the route to be dispatched by multiple routes. Optional parameters are defined by placing a `?`-mark after the colon:
+
+```php title="routes/app.php"
+Router::get('/user/:?id', fn($id) => ...);
+```
+
+When the parameter is omitted from the route, it will be unset in the matched route.
+
+### Catch-all parameters
+
+Parameters can also be extended to catch all subsequent segments in the path. Catch-all parameters are defined by replacing the colon with an asterisk (`*`):
+
+```php title="routes/app.php"
+Router::get('/posts/*slug', fn($slug) => ...);
+```
+
+When using a catch-all parameter, all subsequent segments are returned as a single string.
+
+| Route             | Match           | Parameter         |
+| ----------------- | --------------- | ----------------- |
+| `/posts/*slug`    | `/posts/a`      | `'a'`             |
+| `/posts/*slug`    | `/posts/a/b`    | `'a/b'`           |
+| `/posts/*slug`    | `/posts/a/b/c`  | `'a/b/c'`         |
+
+Catch-all parameters also require a value to be given before matching. Requesting `/posts` will return an HTTP 404 error. To allow the catch-all to match routes without giving the parameter, you can mark it as optional:
+
+```php title="routes/app.php"
+Router::get('/posts/*?slug', fn($slug) => ...);
+```
+
+### Custom pattern constraints
+
+You may write your own constraints for route parameters using regular expressions. Constraints are defined per-argument and can be written like so:
+
+```php title="routes/app.php"
+Router::get('/user/:id', fn($id) => ...)
+    ->constraints(['id' => '\d+']);
+
+Router::get('/user/:name', fn($name) => ...)
+    ->constraints(['name' => '[A-Za-z]+']);
+```
+
+This limits which values can be matched with the route. If the route doesn't match, it'll continue looking for one that does.

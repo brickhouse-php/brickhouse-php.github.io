@@ -1,0 +1,95 @@
+---
+title: Project Structure
+description: Detailed listing of project files and folders.
+sidebar:
+    order: 2
+---
+
+import { FileTree } from '@astrojs/starlight/components';
+
+Your new Brickhouse projct will already include some files and directories. Otherwise, you may create yourself throughout your applications lifespan.
+
+This page details how Brickhouse applictions are organized.
+
+## Directories and files
+
+Before we go much further, let's take a look at the generated directory structure of the application. If you've worked with Laravel or Ruby on Rails before, many of these will already feel intuitive:
+
+| Folder            | Purpose     |
+| ----------------- | ------------- |
+| `assets/`         | Contains all uncompiled assets which are meant to be served alongside your application. Usually used for CSS, JavaScript, etc. |
+| `config/`         | Contains configuration files for all the extensions in your application. |
+| `public/`         | Contains all the static files and compiled assets. This directory will be served, as-is. |
+| `resources/`      | Contains your view templates, database migrations and other non-source code elements of your application. |
+| `routes/`         | Definitions for how the application should route traffic to controllers, actions and commands. |
+| `src/`            | Contains most of your application code, such as controllers, models, views and more. |
+| `storage/`        | Local storage for items which will outlast the application lifetime, such as logs, caches, databases, etc. |
+| `tests/`          | Unit- and feature-tests, fixtures and other testing apparatus. |
+| `vendor/`         | Storage directory for all third-party code. |
+| `brickhouse`      | Entrypoint for your application and console commands. |
+
+### Example Project Tree
+
+A common Brickhouse application might look something like this:
+
+<FileTree>
+
+- assets
+  - global.css
+  - analytics.ts
+- config
+  - app.config.php
+  - database.config.php
+  - log.config.php
+- public
+  - favicon.svg
+  - index.php
+  - robots.txt
+- resources
+  - migrations
+    - 20250105_104448_add_users_table.php
+    - 20250105_112141_add_posts_table.php
+    - 20250105_144225_add_authors_table.php
+  - views
+    - author
+      - index.html.php
+      - show.html.php
+    - components
+      - header.html.php
+      - subheader.html.php
+      - body.html.php
+    - collection
+      - index.html.php
+      - show.html.php
+    - layouts
+      - index.html.php
+      - post.html.php
+    - post
+      - index.html.php
+      - show.html.php
+    - index.html.php
+    - dashboard.html.php
+- routes
+  - app.php
+- src
+  - Controllers
+    - AuthorController.php
+    - CollectionController.php
+    - PostController.php
+  - Models
+    - Author.php
+    - PostCollection.php
+    - Post.php
+    - User.php
+- storage
+  - database.sqlite
+- brickhouse
+- composer.json
+- composer.lock
+- .env
+- .env.development
+- .env.production
+- package.json
+- package-lock.json
+
+</FileTree>

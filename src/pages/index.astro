@@ -1,0 +1,80 @@
+---
+import type { Props } from '@astrojs/starlight/props';
+
+import Primary from '../components/Button/Primary.astro';
+import Secondary from '../components/Button/Secondary.astro';
+import Terminal from '../components/Terminal.astro';
+import FrontLayout from '../layouts/Front.astro';
+---
+
+<FrontLayout {...Astro.props} title="Meet the Developer's framework">
+    <div class="w-full flex flex-col items-center gap-6 mt-6 lg:mt-16">
+        <h1 class="text-3xl text-center font-extrabold tracking-[0.01rem] text-zinc-950 mb-0 dark:text-gray-200 sm:text-6xl">
+            The
+            <span class="bg-clip-text text-transparent bg-gradient-to-r from-orange-500 via-red-500 via-70% to-rose-600">Modern</span>
+            PHP Framework
+        </h1>
+
+        <p class="max-w-xl mx-auto text-gray-600 text-center dark:text-zinc-400 text-md leading-relaxed font-light lg:text-lg">
+            Brickhouse brings the modern development approach to PHP, allowing for expressive and readable syntax.
+            It contains all the stuff you need, and none of the stuff you don't.
+        </p>
+
+        <div class="flex flex-col md:flex-row gap-4">
+            <a href="/getting-started/installation" class="no-underline">
+                <Primary size="large">
+                    Get Started
+                </Primary>
+            </a>
+
+            <a href="/getting-started/introduction" class="no-underline">
+                <Secondary size="large">
+                    Documentation
+                </Secondary>
+            </a>
+        </div>
+    </div>
+
+    <div class="w-full max-w-2xl flex flex-col justify-center gap-8 mt-8 lg:mt-16">
+        <Terminal
+            code=`
+            <?php
+
+namespace App\\Controllers;
+
+use App\\Models\\Post;
+use Brickhouse\\Http\\Controller;
+use Brickhouse\\Http\\Response;
+
+final class PostController extends Controller
+{
+    public function index(): Response
+    {
+        return render('posts/index', [
+            'posts' => Post::all()
+        ]);
+    }
+
+    public function show(int $id): Response
+    {
+        return render('posts/show', [
+            'post' => Post::find($id)
+        ]);
+    }
+}
+`
+        />
+
+        <Terminal
+            code=`
+            <?php
+
+use Brickhouse\\Http\\Router;
+
+Router::root(fn() => render('index'));
+
+Router::get('greeting', \\App\\Controllers\\GreetingController::class);
+`
+        />
+    </div>
+</FrontLayout>

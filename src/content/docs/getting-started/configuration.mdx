@@ -1,0 +1,92 @@
+---
+title: Configuration
+description: Guide for configuring Brickhouse applications.
+sidebar:
+    order: 3
+---
+
+All the configuration files for Brickhouse can be found in the source code of the application, in the `config/` directory. These configuration files allow you to configure things like database connections, cache storage, etc.
+
+Most of the time, you wouldn't need to create any configuration files yourself, as the application template already comes with a sensible default setup.
+
+## Environment files
+
+When creating a new project, you might have seen a couple of `.env` files in the project. These can be used to override parts of the applications configuration, depending on the running environment. So, if you're still developing the application, `.env.development` would be used, `.env.production` for production, and so on. Brickhouse determines which environment the application is currently running by inspecting the `APP_ENV` environment variable. If defined, it determines which environment file to use.
+
+For example, if a configuration file uses `env()` to determine an option:
+
+```php
+debug: env("APP_DEBUG", false),
+```
+
+It will check if an environment variable named `APP_DEBUG` is set. If so, it uses the value to set the value of `debug`. If it is not set, it uses the second parameters as the "default value."
+
+### Security
+
+It should be noted that the `.env` file should not be commited to your source control, since it often contains sensitive credentials. This would be a security risk in case your source repository ever gets exposed by third parties.
+
+## Current Environment
+
+You can access the currently running environment from inside the application using `Environment::current()`:
+
+```php
+use Brickhouse\Config\Environment;
+
+$environment = Environment::current();
+```
+
+You can also check if the current environment matches a given value:
+
+```php
+if(Environment::is('development')) {
+    // The environment is 'development'.
+}
+
+if(Environment::is(['development', 'staging'])) {
+    // The environment is either 'development' or 'staing'.
+}
+```
+
+## Configuration Files
+
+Each configuration file within `config` uses the `.config.php` extension to denote that it is a configuration file. Additionally, all configuration files return a configuration object which can be retrieved in the application later:
+
+```php title="config/app.config.php"
+<?php
+
+namespace App\Config;
+
+use Brickhouse\Core\AppConfig;
+
+return new AppConfig(
+    debug: env("APP_DEBUG", false),
+    api_only: false,
+);
+```
+
+In order to retrieve the configuration, you can use dependency injection:
+
+```php
+namespace App\Controllers;
+
+use Brickhouse\Core\AppConfig;
+use Brickhouse\Http\Controller;
+
+class GreetingController extends Controller
+{
+    public function __construct(
+        protected readonly AppConfig $config,
+    ) {
+        $value = $this->config->api_only;
+    }
+}
+```
+
+If you need the configuration outside of a DI-context, you can also use `resolve()`:
+
+```php
+use Brickhouse\Core\AppConfig;
+
+$config = resolve(AppConfig::class);
+$value = $config->api_only;
+```
