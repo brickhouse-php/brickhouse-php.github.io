@@ -10,7 +10,7 @@ export default defineConfig({
     starlight({
       title: "Brickhouse",
       social: {
-        github: "https://github.com/maxnatamo/brickhouse",
+        github: "https://github.com/brickhouse-php/brickhouse-php.github.io",
       },
       editLink: {
         baseUrl: "https://github.com/brickhouse-php/docs/edit/main/",
