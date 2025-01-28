@@ -1,0 +1,86 @@
+---
+title: Furnace
+description: Asset pipeline package for building JavaScript, CSS and other assets.
+---
+
+import { Code, Steps, Tabs, TabItem } from '@astrojs/starlight/components';
+
+**Furnace** provides the developer with an easy way to build assets for the frontend, by passing them through [esbuild](http://esbuild.github.io), a high-performance asset builder written Go. It supports many different content types, including, but not limited to, JavaScript, TypeScript, CSS, JSX and more. It also has a well-developed plugin ecosystem, allowing for even more functionality.
+
+Out of the box, the Furnace installer allows you to pick some extra plugins to install, including:
+
+- [TailwindCSS](https://tailwindcss.com)
+- [LessCSS](https://lesscss.org/)
+
+## Installation
+
+Furnace can be installed via Composer:
+
+```bash
+composer require brickhouse/furnace
+```
+
+After which, you can install it to setup the default configuration:
+
+```bash
+php brickhouse install:furnace
+```
+
+This command will prompt for multiple selections, such as which plugins to include, whether to use TypeScript, etc. After finished, Furnace will have created some initial assets, configuration file(s) and other elements to create a seamless development experience.
+
+By default, Furnace will have created an esbuild build script in `assets/build.mjs`. This file defines how esbuild should build you assets, where they should be stored after building, and so on.
+
+Lastly, you can build all the assets in your project:
+
+```bash
+php brickhouse build
+```
+
+### Third-party plugins
+
+Since Furnace is based on esbuild, all plugins will work as they would with esbuild. Esbuild has it's own index of plugins at [esbuild/community-plugins](https://github.com/esbuild/community-plugins).
+
+To install an esbuild plugin:
+
+<Steps>
+1. Install the package via your package manager:
+    <Tabs>
+        <TabItem label="npm">
+            ```bash
+            npm install --save-dev [PLUGIN-NAME]
+            ```
+        </TabItem>
+        <TabItem label="Yarn">
+            ```bash
+            yarn add --dev [PLUGIN-NAME]
+            ```
+        </TabItem>
+        <TabItem label="Bun">
+            ```bash
+            bun add --dev [PLUGIN-NAME]
+            ```
+        </TabItem>
+        <TabItem label="Deno">
+            ```bash
+            deno add --dev npm:[PLUGIN-NAME]
+            ```
+        </TabItem>
+    </Tabs>
+
+2. Import the plugin and add it to your build script:
+    ```js title="assets/build.mjs" ins={2,9-11}
+    import * as esbuild from 'esbuild'
+    import pluginName from "PLUGIN-NAME"
+
+    await esbuild.build({
+        // ...
+
+        plugins: [
+            // ...
+            pluginName({
+                // plugins options...
+            })
+        ]
+    });
+    ```
+</Steps>

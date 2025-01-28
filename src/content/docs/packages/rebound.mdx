@@ -1,0 +1,73 @@
+---
+title: Rebound
+description: Package which provides real-time capabilities for Brickhouse.
+---
+
+**Rebound** provides your application with real-time capabilities, allowing you to handle events, send updates to your users, or broadcast messages. Rebound supports WebSockets as it's transport layer, making communications between client and server bidirectional.
+
+Rebound can be used for a multitude of applications, such as instant messaging, updating the frontend with new pricing, video game leaderboards, and more.
+
+## Installation
+
+Rebound can be installed via Composer:
+
+```bash
+composer require brickhouse/rebound
+```
+
+## The Moving Parts
+
+After installing Rebound, you can mount it in your applications routes:
+
+```php title="routes/app.php"
+Rebound::mount('ws', \App\Controllers\ReboundController::class);
+```
+
+In this example, `/ws` is routed the controller `ReboundController`, which is defined as:
+
+```php title="src/Controllers/ReboundController.php"
+namespace App\Controllers;
+
+use Brickhouse\Http\Controller;
+use Brickhouse\Http\Response;
+use Brickhouse\Rebound\Websocket\WebsocketClient;
+
+final class ReboundController extends Controller
+{
+    /**
+     * Renders a streamed response to the user.
+     *
+     * @return Response
+     */
+    public function __invoke(WebsocketClient $client): void
+    {
+        // Wait for the client to send a message
+        foreach ($client as $message) {
+            // Send back the message from the client.
+            $client->send($message);
+        }
+    }
+}
+```
+
+This controller will, in essence, echo everything the client sends back to the client. While not itself useful, it allows for much more complex applications.
+
+You may have noticed the `WebsocketClient` parameter. This instance was injected via the dependency injection container, allowing us to read and write to the client.
+
+## Running the server
+
+To start the Rebound server, run the following command:
+
+```bash
+php brickhouse rebound:serve
+```
+
+By default, Rebound starts listening on `127.0.0.1:9000`. This is mainly for development and testing purposes, as only the local machine will be able to access it.
+
+If you need to specify a custom host or port, you can do so with the `--host` and `--port` options when starting the server:
+
+```bash
+php brickhouse rebound:serve --host 0.0.0.0 --port 8030
+```
+
+Alternatively, you may define the `REBOUND_SERVER_HOST` and `REBOUND_SERVER_PORT` environment variables. Be aware, these environment variables are only used if the server was started without those options. This means that the parameters given to the command will take precedence.

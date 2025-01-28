@@ -24,6 +24,10 @@ export default defineConfig({
           label: "Routing",
           autogenerate: { directory: "routing" },
         },
+        {
+          label: "Packages",
+          autogenerate: { directory: "packages" },
+        },
       ],
       expressiveCode: {
         themes: ["github-dark", "github-light"],
